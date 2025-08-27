@@ -1,14 +1,23 @@
 #include "process.h"
 
-process::process() {}
+process::process() {
+    qmlscene = settings.value("qmlscenepath").toString();
+    qmlfile  = settings.value("qmlfilepath").toString();
+}
 
 void process::timerEvent(QTimerEvent *event){
     if(event->timerId() == interval){
         if(checked){
-            QProcess proc;
             QStringList arg;
             arg << qmlfile;
-            proc.start(qmlscene, arg);
+            QFileInfo info;
+            info.setFile(qmlfile);
+
+            if(info.lastModified() != lastModified){
+                if(proc->isOpen()) proc->close();
+                proc->start(qmlscene, arg);
+                lastModified = info.lastModified();
+            }
         }
     }
 }
@@ -18,5 +27,9 @@ void process::checkState(bool tf, QString scene, QString file){
     qmlscene = scene;
     qmlfile  = file;
 
-    qDebug() << checked << qmlscene << qmlfile;
+    if(qmlscene.contains("file:///")) qmlscene.remove("file:///");
+    if(qmlfile.contains("file:///")) qmlfile.remove("file:///");
+
+    settings.setValue("qmlscenepath", qmlscene);
+    settings.setValue("qmlfilepath", qmlfile);
 }

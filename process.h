@@ -5,6 +5,9 @@
 #include <QProcess>
 #include <QTimerEvent>
 #include <QDebug>
+#include <QDateTime>
+#include <QFileInfo>
+#include <QSettings>
 
 class process : public QObject
 {
@@ -13,6 +16,9 @@ public:
     process();
 
     int interval = startTimer(1000 * 5);
+    QDateTime lastModified = QDateTime::currentDateTime();
+    QProcess *proc = new QProcess;
+    QSettings settings;
 
     //from QML
     bool checked = false;

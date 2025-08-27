@@ -9,7 +9,7 @@ ApplicationWindow {
     width: 640
     height: 480
     Material.theme:  Material.Dark
-    Material.accent: Material.DeepPurple
+    Material.accent: Material.Blue
 
     //get font from URL
     // FontLoader {
@@ -32,6 +32,12 @@ ApplicationWindow {
             qmlFilePATH.text = qmlFileDialog.currentFile
         }
     }
+
+    Component.onCompleted: {
+        qmlscenePATH.text = qmlscenepath
+        qmlFilePATH.text  = qmlfilepath
+    }
+
     ColumnLayout{
         anchors.centerIn: parent
         width: parent.width * 0.95
@@ -64,7 +70,7 @@ ApplicationWindow {
             id: activator
             objectName: "activator"
             text: checked ? "更新中":"停止中"
-            Layout.alignment: Layout.right
+            anchors.right: parent.right
             onCheckedChanged: process.checkState(checked, qmlscenePATH.text, qmlFilePATH.text)
         }
     }
